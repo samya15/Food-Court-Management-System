@@ -1,0 +1,1132 @@
+#include<iostream>
+#include<fstream>
+#include<sstream>
+#include<vector>
+#include<string>
+//Work on Comments: automatic cost picking
+//bills and purchase delete other table also/delete delete option
+using namespace std;
+class Inventory
+{
+public:
+    Inventory(){}
+    Inventory(string b, int c, int d){}//Constructor in Base Class
+    Inventory(string b, string c, string d){}//Constructor in Base Class
+    Inventory(string b, string c, int d){}//Constructor in Base Class
+    Inventory(int a, string b, int c, int d){}//Constructor in Base Class
+    friend void get_all();//Friend Function to get all data
+};
+class Employee
+{
+public:
+    Employee(){}
+    Employee(string b, string c, string d){}//Constructor in Base Class
+    friend void get_all();//Friend Function to get all data
+};
+class Billing
+{
+public:
+    Billing(){}
+    Billing(string a, string b){}//Constructor in Base Class
+    Billing(int a){}//Constructor in Base Class
+    Billing(int a, string b, int c, int d, int e){}//Constructor in Base Class
+    friend void get_all();//Friend Function to get all data
+};
+void get_all(string file_name)
+{
+    ifstream obj;
+    obj.open(file_name);
+    string line,word;
+    vector<string> v;
+    vector<vector<string> > vect;
+    if(file_name=="items.csv")
+        cout<<"\nITEMS:\n\n";
+    else if(file_name=="suppliers.csv")
+        cout<<"\nSUPPLIERS:\n\n";
+    else if(file_name=="employees.csv")
+        cout<<"\nEMPLOYEES:\n\n";
+    else if(file_name=="purchase.csv")
+        cout<<"\nPURCHASES:\n\n";
+    else if(file_name=="bills.csv")
+        cout<<"\nBILLS:\n\n";
+    while(getline(obj,line))
+    {
+        v.clear();
+        stringstream s(line);
+        while(getline(s,word,','))
+        {
+            v.push_back(word);
+        }
+        vect.push_back(v);
+    }
+    obj.close();
+    for(int i=0;i<vect.size();i++)
+    {
+        if(file_name=="items.csv")
+        {
+            cout<<"Item ID: "<<vect[i][0]<<endl;
+            cout<<"Item Name: "<<vect[i][1]<<endl;
+            cout<<"Cost: "<<vect[i][2]<<endl;
+            cout<<"MRP: "<<vect[i][3]<<endl<<endl;
+        }
+        else if(file_name=="suppliers.csv")
+        {
+            cout<<"Supplier ID: "<<vect[i][0]<<endl;
+            cout<<"Supplier Name: "<<vect[i][1]<<endl;
+            cout<<"Address: "<<vect[i][2]<<endl;
+            cout<<"Phone No.: "<<vect[i][3]<<endl<<endl;
+        }
+        else if(file_name=="employees.csv")
+        {
+            cout<<"Employee ID: "<<vect[i][0]<<endl;
+            cout<<"Employee Name: "<<vect[i][1]<<endl;
+            cout<<"Address: "<<vect[i][2]<<endl;
+            cout<<"Phone No.: "<<vect[i][3]<<endl<<endl;
+        }
+        else if(file_name=="purchase.csv")
+        {
+            ifstream obj1;
+            obj1.open("purchase_details.csv");
+            string linee,wordd;
+            vector<string> vv;
+            vector<vector<string> > v3;
+            while(getline(obj1,linee))
+            {
+                vv.clear();
+                stringstream ss(linee);
+                while(getline(ss,wordd,','))
+                {
+                    vv.push_back(wordd);
+                }
+                if(vect[i][0]==vv[1])
+                {
+                    v3.push_back(vv);
+                }
+            }
+            obj1.close();
+            cout<<"Purchase ID: "<<vect[i][0]<<endl;
+            cout<<"Receipt No.: "<<vect[i][1]<<endl;
+            cout<<"Date of Purchase: "<<vect[i][2]<<endl;
+            cout<<"Supplier ID: "<<vect[i][3]<<endl;
+            cout<<"Items Purchased:"<<endl<<endl;
+            for(int j=0;j<v3.size();j++)
+            {
+                cout<<"\tItem Name: "<<v3[j][2]<<endl;
+                cout<<"\tCost: "<<v3[j][3]<<endl;
+                cout<<"\tUnits: "<<v3[j][4]<<endl<<endl;
+            }
+        }
+        else if(file_name=="bills.csv")
+        {
+            ifstream obj5;
+            obj5.open("bills.csv");
+            vector<string> vo;
+            vector<vector<string> > vecto;
+            while(getline(obj5,line))
+            {
+                vo.clear();
+                stringstream so(line);
+                while(getline(so,word,','))
+                {
+                    vo.push_back(word);
+                }
+                vecto.push_back(vo);
+            }
+            ifstream obj6;
+            obj6.open("bill_details.csv");
+            string linee,wordd;
+            vector<string> vv;
+            vector<vector<string> > v3;
+            while(getline(obj6,linee))
+            {
+                vv.clear();
+                stringstream ss(linee);
+                while(getline(ss,wordd,','))
+                {
+                    vv.push_back(wordd);
+                }
+                if(vecto[i][0]==vv[1])
+                {
+                    v3.push_back(vv);
+                }
+            }
+            obj6.close();
+            cout<<"\n------------------------------------------------------------------------\n";
+            cout<<"********************************BILL************************************\n";
+            cout<<"Bill ID: "<<vecto[i][0]<<endl;
+            cout<<"Date: "<<vecto[i][1]<<endl;
+            cout<<"Customer Name: "<<vecto[i][2]<<endl;
+            cout<<"\nITEM NAME\t\tMRP\tUNITS\tCOST\n\n";
+            for(int j=0;j<v3.size();j++)
+            {
+                cout<<v3[j][2];
+                int l=v3[j][2].length();//feature for perfect column display
+                l=14-1;
+                while(l--)
+                {
+                    cout<<" ";
+                }
+                cout<<"\t"<<v3[j][3];
+                cout<<"\t"<<v3[j][4];
+                cout<<"\t"<<v3[j][5]<<endl;
+            }
+            cout<<"Total Cost: "<<vecto[i][3]<<endl;
+            cout<<"\nThank you for shopping...";
+            cout<<"\n-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n";
+            obj5.close();
+        }
+    }
+}
+class items:public Inventory //Inheritance
+{
+    int item_id, cost, mrp;
+    string item_name;
+public:
+    items(){}
+    items(string item_namee, int costt, int mrpp):Inventory(item_namee,costt,mrpp)//Constructor in Derived Class(to input data)
+    {
+        ifstream obj1;
+        obj1.open("items.csv");
+        string line,word;
+        vector<string> v;
+        vector<vector<string> > vect;
+        int count=0;
+        while(getline(obj1,line))
+        {
+            v.clear();
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+            count++;
+        }
+        int a=stoi(vect[count-1][0]);
+        obj1.close();
+        item_id=a+1;
+        item_name=item_namee;
+        cost=costt;
+        mrp=mrpp;
+        fstream obj;//File Handling using CSV Files
+        obj.open("items.csv",ios::app);
+        obj<<item_id<<","<<item_name<<","<<cost<<","<<mrp<<endl;
+        obj.close();
+    }
+    void operator -()//Operator Overloading(to delete data)
+    {
+        ifstream obj;
+        obj.open("items.csv");
+        string line, word;
+        vector<vector<string> > vect;
+        vector<vector<string> >::iterator it;
+        while(getline(obj,line))
+        {
+            vector<string> v;
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+        }
+        obj.close();
+        //Showing all items:
+        cout<<"\nITEMS:\n";
+        for(int i=0;i<vect.size();i++)
+        {
+            cout<<vect[i][0]<<" "<<vect[i][1];
+            cout<<endl;
+        }//
+        int id;
+        cout<<"\nEnter the Item ID you want to delete: ";
+        cin>>id;
+        for(int i=0;i<vect.size();i++)
+        {
+            int a=stoi(vect[i][0]);
+            if(a==id)
+            {
+                it=vect.begin()+i;
+                vect.erase(it);
+                cout<<"Record Deleted Successfully!\n";
+            }
+        }
+        ofstream obj1;
+        obj1.open("items.csv");
+        for(int i=0;i<vect.size();i++)
+        {
+            obj1<<vect[i][0]<<","<<vect[i][1]<<","<<vect[i][2]<<","<<vect[i][3]<<endl;
+        }
+        obj1.close();
+    }
+};
+class suppliers:public Inventory //Inheritance
+{
+    int supp_id;
+    string supp_name, supp_address, phone;
+public:
+    suppliers(){}
+    suppliers(string supp_namee, string supp_addresss, string phonee):Inventory(supp_namee,supp_addresss,phonee)//Constructor in Derived Class(to input data)
+    {
+        ifstream obj1;
+        obj1.open("suppliers.csv");
+        string line,word;
+        vector<string> v;
+        vector<vector<string> > vect;
+        int count=0;
+        while(getline(obj1,line))
+        {
+            v.clear();
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+            count++;
+        }
+        int a=stoi(vect[count-1][0]);
+        obj1.close();
+        supp_id=a+1;
+        supp_name=supp_namee;
+        supp_address=supp_addresss;
+        phone=phonee;
+        fstream obj;//File Handling using CSV Files
+        obj.open("suppliers.csv",ios::app);
+        obj<<supp_id<<","<<supp_name<<","<<supp_address<<","<<phone<<endl;
+        obj.close();
+    }
+    void operator -()//Operator Overloading(to delete data)
+    {
+        ifstream obj;
+        obj.open("suppliers.csv");
+        string line, word;
+        vector<vector<string> > vect;
+        vector<vector<string> >::iterator it;
+
+        while(getline(obj,line))
+        {
+            vector<string> v;
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+        }
+        obj.close();
+        //Showing all items:
+        cout<<"\nSUPPLIERS:\n";
+        for(int i=0;i<vect.size();i++)
+        {
+            cout<<vect[i][0]<<" "<<vect[i][1];
+            cout<<endl;
+        }//
+        int id;
+        cout<<"\nEnter the Supplier ID you want to delete: ";
+        cin>>id;
+        for(int i=0;i<vect.size();i++)
+        {
+            int a=stoi(vect[i][0]);
+            if(a==id)
+            {
+                it=vect.begin()+i;
+                vect.erase(it);
+                cout<<"Record Deleted Successfully!\n";
+            }
+        }
+        ofstream obj1;
+        obj1.open("suppliers.csv");
+        for(int i=0;i<vect.size();i++)
+        {
+            obj1<<vect[i][0]<<","<<vect[i][1]<<","<<vect[i][2]<<","<<vect[i][3]<<endl;
+        }
+        obj1.close();
+    }
+};
+class purchase:public Inventory //Inheritance
+{
+    int purchase_id, supp_id_c;
+    string receipt_no, date_of_purchase;
+public:
+    purchase(){}
+    purchase(string receipt_noo, string date_of_purchasee, int supp_id_cc):Inventory(receipt_noo,date_of_purchasee,supp_id_cc)//Constructor in Derived Class(to input data)
+    {
+        ifstream obj1;
+        obj1.open("purchase.csv");
+        string line,word;
+        vector<string> v;
+        vector<vector<string> > vect;
+        int count=0;
+        while(getline(obj1,line))
+        {
+            v.clear();
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+            count++;
+        }
+        int a=stoi(vect[count-1][0]);
+        obj1.close();
+        purchase_id=a+1;
+        receipt_no=receipt_noo;
+        date_of_purchase=date_of_purchasee;
+        supp_id_c=supp_id_cc;
+        fstream obj;//File Handling using CSV Files
+        obj.open("purchase.csv",ios::app);
+        obj<<purchase_id<<","<<receipt_no<<","<<date_of_purchase<<","<<supp_id_c<<endl;
+        obj.close();
+    }
+    void operator -()//Operator Overloading(to delete data)
+    {
+        ifstream obj;
+        obj.open("purchase.csv");
+        string line, word;
+        vector<vector<string> > vect;
+        vector<vector<string> >::iterator it;
+        while(getline(obj,line))
+        {
+            vector<string> v;
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+        }
+        obj.close();
+        //Showing all items:
+        cout<<"\nPURCHASES:\n";
+        for(int i=0;i<vect.size();i++)
+        {
+            cout<<vect[i][0]<<" "<<vect[i][1]<<" "<<vect[i][2]<<" "<<vect[i][3];
+            cout<<endl;
+        }//
+        int id;
+        cout<<"\nEnter the Purchase ID you want to delete: ";
+        cin>>id;
+        for(int i=0;i<vect.size();i++)
+        {
+            int a=stoi(vect[i][0]);
+            if(a==id)
+            {
+                it=vect.begin()+i;
+                vect.erase(it);
+                cout<<"Record Deleted Successfully!\n";
+            }
+        }
+        ofstream obj1;
+        obj1.open("purchase.csv");
+        for(int i=0;i<vect.size();i++)
+        {
+            obj1<<vect[i][0]<<","<<vect[i][1]<<","<<vect[i][2]<<","<<vect[i][3]<<endl;
+        }
+        obj1.close();
+    }
+};
+class purchase_details:public Inventory //Inheritance
+{
+    int purchase_details_id, purchase_id_c, cost, units;
+    string item_name_c;
+public:
+    purchase_details(){}
+    purchase_details(int purchase_id_cc, string item_name_cc, int costt, int unitss):Inventory(purchase_id_cc, item_name_cc, costt, unitss)//Constructor in Derived Class(to input data)
+    {
+        ifstream obj1;
+        obj1.open("purchase_details.csv");
+        string line,word;
+        vector<string> v;
+        vector<vector<string> > vect;
+        int count=0;
+        while(getline(obj1,line))
+        {
+            v.clear();
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+            count++;
+        }
+        int a=stoi(vect[count-1][0]);
+        obj1.close();
+        purchase_details_id=a+1;
+        purchase_id_c=purchase_id_cc;
+        item_name_c=item_name_cc;
+        cost=costt;
+        units=unitss;
+        fstream obj;//File Handling using CSV Files
+        obj.open("purchase_details.csv",ios::app);
+        obj<<purchase_details_id<<","<<purchase_id_c<<","<<item_name_c<<","<<cost<<","<<units<<endl;
+        obj.close();
+    }
+};
+class bills:public Billing //Inheritance
+{
+    int bill_id, total_cost;
+    string date, customer_name;
+public:
+    bills(){}
+    bills(string datee, string customer_namee):Billing(datee,customer_namee)//Constructor in Derived Class(to input data)
+    {
+        ifstream obj1;
+        obj1.open("bills.csv");
+        string line,word;
+        vector<string> v;
+        vector<vector<string> > vect;
+        int count=0;
+        while(getline(obj1,line))
+        {
+            v.clear();
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+            count++;
+        }
+        int a=stoi(vect[count-1][0]);
+        obj1.close();
+        bill_id=a+1;
+        date=datee;
+        customer_name=customer_namee;
+        fstream obj;//File Handling using CSV Files
+        obj.open("bills.csv",ios::app);
+        obj<<bill_id<<","<<date<<","<<customer_name;
+        obj.close();
+    }
+    bills(int total_costt):Billing(total_costt)//Constructor in Derived Class(to input data)
+    {
+        fstream obj;//File Handling using CSV Files
+        obj.open("bills.csv",ios::app);
+        total_cost=total_costt;
+        obj<<","<<total_cost<<endl;
+        obj.close();
+    }
+    void operator -()//Operator Overloading(to delete data)
+    {
+        ifstream obj;
+        obj.open("bills.csv");
+        string line, word;
+        vector<vector<string> > vect;
+        vector<vector<string> >::iterator it;
+
+        while(getline(obj,line))
+        {
+            vector<string> v;
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+        }
+        obj.close();
+        //Showing all items:
+        cout<<"\nBILLS:\n";
+        for(int i=0;i<vect.size();i++)
+        {
+            cout<<vect[i][0]<<" "<<vect[i][1]<<" "<<vect[i][2]<<" "<<vect[i][3];
+            cout<<endl;
+        }//
+        int id;
+        cout<<"\nEnter the Bill ID you want to delete: ";
+        cin>>id;
+        for(int i=0;i<vect.size();i++)
+        {
+            int a=stoi(vect[i][0]);
+            if(a==id)
+            {
+                it=vect.begin()+i;
+                vect.erase(it);
+                cout<<"Record Deleted Successfully!\n";
+            }
+        }
+        ofstream obj1;
+        obj1.open("bills.csv");
+        for(int i=0;i<vect.size();i++)
+        {
+            obj1<<vect[i][0]<<","<<vect[i][1]<<","<<vect[i][2]<<","<<vect[i][3]<<endl;
+        }
+        obj1.close();
+    }
+};
+class bill_details:public Billing //Inheritance
+{
+    int bill_details_id, bill_id_c, mrp_c, units, total_item_cost;
+    string item_name_c;
+public:
+    bill_details(){}
+    bill_details(int bill_id_cc, string item_name_cc, int mrp_cc, int unitss, int total_item_costt):Billing(bill_id_cc,item_name_cc,mrp_cc,unitss,total_item_costt)//Constructor in Derived Class(to input data)
+    {
+        ifstream obj1;
+        obj1.open("bill_details.csv");
+        string line,word;
+        vector<string> v;
+        vector<vector<string> > vect;
+        int count=0;
+        while(getline(obj1,line))
+        {
+            v.clear();
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+            count++;
+        }
+        int a=stoi(vect[count-1][0]);
+        obj1.close();
+        bill_details_id=a+1;
+        bill_id_c=bill_id_cc;
+        item_name_c=item_name_cc;
+        mrp_c=mrp_cc;
+        units=unitss;
+        total_item_cost=total_item_costt;
+        fstream obj;//File Handling using CSV Files
+        obj.open("bill_details.csv",ios::app);
+        obj<<bill_details_id<<","<<bill_id_c<<","<<item_name_c<<","<<mrp_c<<","<<units<<','<<total_item_cost<<endl;
+        obj.close();
+    }
+};
+class employees:public Employee //Inheritance
+{
+    int emp_id;
+    string emp_name, emp_address, phone;
+public:
+    employees(){}
+    employees(string emp_namee, string emp_addresss, string phonee):Employee(emp_namee,emp_addresss,phonee)//Constructor in Derived Class(to input data)
+    {
+        ifstream obj1;
+        obj1.open("employees.csv");
+        string line,word;
+        vector<string> v;
+        vector<vector<string> > vect;
+        int count=0;
+        while(getline(obj1,line))
+        {
+            v.clear();
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+            count++;
+        }
+        int a=stoi(vect[count-1][0]);
+        obj1.close();
+        emp_id=a+1;
+        emp_name=emp_namee;
+        emp_address=emp_addresss;
+        phone=phonee;
+        fstream obj;//File Handling using CSV Files
+        obj.open("employees.csv",ios::app);
+        obj<<emp_id<<","<<emp_name<<","<<emp_address<<","<<phone<<endl;
+        obj.close();
+    }
+    void operator -()//Operator Overloading(to delete data)
+    {
+        ifstream obj;
+        obj.open("employees.csv");
+        string line, word;
+        vector<vector<string> > vect;
+        vector<vector<string> >::iterator it;
+        while(getline(obj,line))
+        {
+            vector<string> v;
+            stringstream s(line);
+            while(getline(s,word,','))
+            {
+                v.push_back(word);
+            }
+            vect.push_back(v);
+        }
+        obj.close();
+        //Showing all employees:
+        cout<<"\nEMPLOYEES:\n";
+        for(int i=0;i<vect.size();i++)
+        {
+            cout<<vect[i][0]<<" "<<vect[i][1];
+            cout<<endl;
+        }//
+        int id;
+        cout<<"\nEnter the Employee ID you want to delete: ";
+        cin>>id;
+        for(int i=0;i<vect.size();i++)
+        {
+            int a=stoi(vect[i][0]);
+            if(a==id)
+            {
+                it=vect.begin()+i;
+                vect.erase(it);
+                cout<<"Record Deleted Successfully!\n";
+            }
+        }
+        ofstream obj1;
+        obj1.open("employees.csv");
+        for(int i=0;i<vect.size();i++)
+        {
+            obj1<<vect[i][0]<<","<<vect[i][1]<<","<<vect[i][2]<<","<<vect[i][3]<<endl;
+        }
+        obj1.close();
+    }
+};
+void MainMenu(string choice)
+{
+    if(choice=="MainMenu")
+    {
+        cout<<"\n--------------------------------MAIN MENU-----------------------------------\n\n";
+        cout<<"1.-----------------------------Billing System-------------------------------\n";
+        cout<<"2.-----------------------Inventory Management System------------------------\n";
+        cout<<"3.------------------------Employee Management System------------------------\n";
+        cout<<"4.----------------------------------Exit------------------------------------\n\n";
+        int ch;
+        cout<<"Enter your choice: ";
+        cin>>ch;
+        if(ch==1)
+        {
+            MainMenu("Billing System");
+        }
+        else if(ch==2)
+        {
+            MainMenu("Inventory Management System");
+        }
+        else if(ch==3)
+        {
+            MainMenu("Employee Management System");
+        }
+        else if(ch==4)
+        {
+            return;
+        }
+    }
+    else if(choice=="Inventory Management System")
+    {
+        cout<<"\n-----------------------INVENTORY MANAGEMENT SYSTEM------------------------\n\n";
+        cout<<"1.-----------------------------Manage Items---------------------------------\n";
+        cout<<"2.---------------------------Manage Suppliers-------------------------------\n";
+        cout<<"3.---------------------------Manage Purchases-------------------------------\n";
+        cout<<"4.------------------------------Main Menu-----------------------------------\n\n";
+        int ch;
+        cout<<"Enter your choice: ";
+        cin>>ch;
+        if(ch==1)
+        {
+            cout<<"\n-------------------ITEMS----------------------\n";
+            cout<<"1. Delete Items\n";
+            cout<<"2. Show all Items\n";
+            cout<<"3. Inventory Management System\n";
+            int chi;
+            cout<<"Enter your choice: ";
+            cin>>chi;
+            if(chi==1)
+            {
+                items obj;
+                -obj;//use id not found
+                MainMenu("Inventory Management System");
+            }
+            else if(chi==2)
+            {
+                get_all("items.csv");
+                MainMenu("Inventory Management System");
+            }
+            else if(chi==3)
+            {
+                MainMenu("Inventory Management System");
+            }
+        }
+        else if(ch==2)
+        {
+            cout<<"\n--------------SUPPLIERS----------------\n";
+            cout<<"1. Insert Suppliers\n";
+            cout<<"2. Delete Suppliers\n";
+            cout<<"3. Show all Suppliers\n";
+            cout<<"4. Inventory Management System\n";
+            int chi;
+            cout<<"Enter your choice: ";
+            cin>>chi;
+            if(chi==1)
+            {
+                while(true)
+                {
+                    string name,address,phone;
+                    cout<<"Enter supplier name: ";
+                    cin>>name;
+                    cout<<"Enter address: ";
+                    cin>>address;
+                    cout<<"Enter phone no.: ";
+                    cin>>phone;
+                    suppliers obj(name,address,phone);
+                    cout<<"Do you want to add more suppliers(Y/N): ";
+                    char y;
+                    cin>>y;
+                    if(y=='N')
+                    {
+                        MainMenu("Inventory Management System");
+                        break;
+                    }
+                }
+            }
+            else if(chi==2)
+            {
+                suppliers obj;
+                -obj;//use id not found
+                MainMenu("Inventory Management System");
+            }
+            else if(chi==3)
+            {
+                get_all("suppliers.csv");
+                MainMenu("Inventory Management System");
+            }
+            else if(chi==4)
+            {
+                MainMenu("Inventory Management System");
+            }
+        }
+        else if(ch==3)
+        {
+            cout<<"\n--------------PURCHASES----------------\n";
+            cout<<"1. Insert Purchases\n";
+            cout<<"2. Delete Purchases\n";
+            cout<<"3. Show all Purchases\n";
+            cout<<"4. Inventory Management System\n";//if item already exists then bring its cost from the item table.
+            int chi;
+            cout<<"Enter your choice: ";
+            cin>>chi;
+            if(chi==1)
+            {
+                while(true)
+                {
+                    int supp_id;
+                    string receipt,date;
+                    cout<<"Enter receipt no.: ";
+                    cin>>receipt;
+                    cout<<"Enter date: ";
+                    cin>>date;
+                    get_all("suppliers.csv");
+                    cout<<"Enter supplier id.: ";
+                    cin>>supp_id;
+                    purchase obj(receipt,date,supp_id);
+                    int purchase_id, cost, units;
+                    string item_name;
+                    int mrp;
+                    ifstream obj1;
+                    obj1.open("purchase.csv");
+                    string line,word;
+                    vector<string> v;
+                    while(getline(obj1,line))
+                    {
+                        v.clear();
+                        stringstream s(line);
+                        while(getline(s,word,','))
+                        {
+                            v.push_back(word);
+                        }
+                        if(v[1]==receipt)
+                        {
+                            int a=stoi(v[0]);
+                            purchase_id=a;
+                        }
+                    }
+                    obj1.close();
+                    while(true)
+                    {
+                        cout<<"Enter item name: ";
+                        cin>>item_name;
+                        cout<<"Enter cost per item: ";
+                        cin>>cost;
+                        int count=0;
+                        ifstream obj2;
+                        obj2.open("items.csv");
+                        string linee,wordd;
+                        vector<string> vv;
+                        while(getline(obj2,linee))
+                        {
+                            vv.clear();
+                            stringstream ss(linee);
+                            while(getline(ss,wordd,','))
+                            {
+                                vv.push_back(wordd);
+                            }
+                            if(vv[1]==item_name)
+                            {
+                                count++;
+                            }
+                        }
+                        obj2.close();
+                        if(count==0)
+                        {
+                            cout<<"Enter MRP at which you want to sell the item: ";
+                            cin>>mrp;
+                            items obj3(item_name,cost,mrp);
+                        }
+                        cout<<"Enter no. of units: ";
+                        cin>>units;
+                        purchase_details obj4(purchase_id,item_name,cost,units);
+                        cout<<"Do you want to add more items to this purchase(Y/N): ";
+                        char y;
+                        cin>>y;
+                        if(y=='N')
+                        {
+                            break;
+                        }
+                    }
+                    cout<<"Do you want to add more purchases(Y/N): ";
+                    char y;
+                    cin>>y;
+                    if(y=='N')
+                    {
+                        MainMenu("Inventory Management System");
+                        break;
+                    }
+                }
+            }
+            else if(chi==2)
+            {
+                purchase obj;
+                -obj;//use id not found
+                MainMenu("Inventory Management System");
+            }
+            else if(chi==3)
+            {
+                get_all("purchase.csv");
+                MainMenu("Inventory Management System");
+            }
+            else if(chi==4)
+            {
+                MainMenu("Inventory Management System");
+            }
+        }
+        else if(ch==4)
+        {
+            MainMenu("MainMenu");
+        }
+    }
+    else if(choice=="Employee Management System")
+    {
+        cout<<"\n-----------------------EMPLOYEE MANAGEMENT SYSTEM------------------------\n\n";
+        cout<<"1.---------------------------Insert Employees---------------------------------\n";
+        cout<<"2.---------------------------Delete Employees-------------------------------\n";
+        cout<<"3.--------------------------Show All Employees-------------------------------\n";
+        cout<<"4.------------------------------Main Menu-----------------------------------\n\n";
+        int ch;
+        cout<<"Enter your choice: ";
+        cin>>ch;
+        if(ch==1)
+        {
+            while(true)
+            {
+                string name,address,phone;
+                cout<<"Enter employee name: ";
+                cin>>name;
+                cout<<"Enter address: ";
+                cin>>address;
+                cout<<"Enter phone no.: ";
+                cin>>phone;
+                employees obj(name,address,phone);
+                cout<<"Do you want to add more employees(Y/N): ";
+                char y;
+                cin>>y;
+                if(y=='N')
+                {
+                    MainMenu("Employee Management System");
+                    break;
+                }
+            }
+        }
+        else if(ch==2)
+        {
+            employees obj;
+            -obj;//use id not found
+            MainMenu("Employee Management System");
+        }
+        else if(ch==3)
+        {
+            get_all("employees.csv");
+            MainMenu("Employee Management System");
+        }
+        else if(ch==4)
+        {
+            MainMenu("MainMenu");
+        }
+    }
+    else if(choice=="Billing System")
+    {
+        cout<<"\n----------------------------BILLING SYSTEM------------------------\n\n";
+        cout<<"1.-----------------------------Insert Bill---------------------------------\n";
+        cout<<"2.-----------------------------Delete Bill-------------------------------\n";
+        cout<<"3.----------------------------Show All Bills-------------------------------\n";
+        cout<<"4.------------------------------Main Menu-----------------------------------\n\n";
+        int ch;
+        cout<<"Enter your choice: ";
+        cin>>ch;
+        if(ch==1)
+        {
+            int total_cost=0;
+            string customer_name,date;
+            cout<<"Enter date: ";
+            cin>>date;
+            cout<<"Enter Customer name: ";
+            cin>>customer_name;
+            bills obj(date, customer_name);
+            int bill_id, mrp, units, total_item_cost, id;
+            string item_name;
+            ifstream obj1;
+            obj1.open("bills.csv");
+            string line,word;
+            vector<string> v;
+            while(getline(obj1,line))
+            {
+                v.clear();
+                stringstream s(line);
+                while(getline(s,word,','))
+                {
+                    v.push_back(word);
+                }
+                if(v[1]==date)
+                {
+                    int a=stoi(v[0]);
+                    bill_id=a;
+                }
+            }
+            obj1.close();
+            ifstream obj2;
+            obj2.open("items.csv");
+            vector<vector<string> > vect;
+            while(getline(obj2,line))
+            {
+                v.clear();
+                stringstream ss(line);
+                while(getline(ss,word,','))
+                {
+                    v.push_back(word);
+                }
+                vect.push_back(v);
+            }
+            obj2.close();
+            //Showing all items:
+            cout<<"\nITEMS:\n";
+            for(int i=0;i<vect.size();i++)
+            {
+                cout<<vect[i][0]<<" "<<vect[i][1];
+                cout<<endl;
+            }//
+            while(true)
+            {
+                cout<<"Enter item id: ";
+                cin>>id;
+                cout<<"Enter no. of units: ";
+                cin>>units;
+                for(int i=0;i<vect.size();i++)
+                {
+                    int a=stoi(vect[i][0]);
+                    if(a==id)
+                    {
+                        item_name=vect[i][1];
+                        int b=stoi(vect[i][3]);
+                        mrp=b;
+                    }
+                }
+                total_item_cost=mrp*units;
+                total_cost+=total_item_cost;
+                bill_details obj3(bill_id,item_name,mrp,units,total_item_cost);
+                cout<<"Do you want to add more items?(Y/N): ";
+                char y;
+                cin>>y;
+                if(y=='N')
+                {
+                    break;
+                }
+            }
+            bills obj4(total_cost);
+            //Displaying the Bill
+            int c=0;
+            ifstream obj5;
+            obj5.open("bills.csv");
+            vector<string> vo;
+            vector<vector<string> > vecto;
+            while(getline(obj5,line))
+            {
+                vo.clear();
+                stringstream so(line);
+                while(getline(so,word,','))
+                {
+                    vo.push_back(word);
+                }
+                vecto.push_back(vo);
+                c++;
+            }
+            ifstream obj6;
+            obj6.open("bill_details.csv");
+            string linee,wordd;
+            vector<string> vv;
+            vector<vector<string> > v3;
+            while(getline(obj6,linee))
+            {
+                vv.clear();
+                stringstream ss(linee);
+                while(getline(ss,wordd,','))
+                {
+                    vv.push_back(wordd);
+                }
+                if(vecto[c-1][0]==vv[1])
+                {
+                    v3.push_back(vv);
+                }
+            }
+            obj6.close();
+            cout<<"\n------------------------------------------------------------------------\n";
+            cout<<"********************************BILL************************************\n";
+            cout<<"Bill ID: "<<vecto[c-1][0]<<endl;
+            cout<<"Date: "<<vecto[c-1][1]<<endl;
+            cout<<"Customer Name: "<<vecto[c-1][2]<<endl;
+            cout<<"\nITEM NAME\t\tMRP\tUNITS\tCOST\n\n";
+            for(int j=0;j<v3.size();j++)
+            {
+                cout<<v3[j][2];
+                int l=v3[j][2].length();//feature for perfect column display
+                l=14-1;
+                while(l--)
+                {
+                    cout<<" ";
+                }
+                cout<<"\t"<<v3[j][3];
+                cout<<"\t"<<v3[j][4];
+                cout<<"\t"<<v3[j][5]<<endl;
+            }
+            cout<<"Total Cost: "<<vecto[c-1][3]<<endl;
+            cout<<"\nThank you for shopping...";
+            cout<<"\n-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n";
+            obj5.close();
+            MainMenu("Billing System");
+        }
+        else if(ch==2)
+        {
+            bills obj;
+            -obj;//use id not found
+            MainMenu("Billing System");
+        }
+        else if(ch==3)
+        {
+            get_all("bills.csv");
+            MainMenu("Billing System");
+        }
+        else if(ch==4)
+        {
+            MainMenu("MainMenu");
+        }
+    }
+}
+
+int main()
+{
+    MainMenu("MainMenu");
+    return 0;
+}
